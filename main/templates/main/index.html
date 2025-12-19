@@ -1,0 +1,274 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Football Fever — Landing</title>
+
+  <link rel="stylesheet" href="{% static 'main/styles.css' %}">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <div class="badge">FF</div>
+      <div>
+        <div style="font-size:0.9rem">Football Fever</div>
+        <small style="color:var(--muted);">Official Demo</small>
+      </div>
+    </div>
+
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#">Home</a>
+      <a href="#teams">Teams</a>
+      <a href="#players">Players</a>
+      <a href="#admin">Admin</a>
+    </nav>
+
+    <div style="display:flex;gap:0.6rem;align-items:center">
+      <button id="teamBtn" class="btn secondary">Team Login</button>
+      <button id="teamSignUpBtn" class="btn secondary">Team Sign Up</button>
+      <button id="adminBtn" class="btn secondary">Admin Login</button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main>
+    <section class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">Premier Demo • Live</div>
+        <h1>Football Fever</h1>
+        <p class="lead">A modern, responsive football landing page demo. Explore teams and players, and use the Admin dashboard to manage demo data — built with vanilla HTML, CSS and JavaScript.</p>
+
+        <div class="cta-row">
+          <button class="btn large" onclick="document.getElementById('teams').scrollIntoView({behavior:'smooth'})">Explore Teams</button>
+          <button class="btn secondary" onclick="document.getElementById('players').scrollIntoView({behavior:'smooth'})">Browse Players</button>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta card">
+            <div class="big" id="teamsCount">--</div>
+            <div class="small">Teams in this demo</div>
+          </div>
+          <div class="meta card">
+            <div class="big" id="playersCount">--</div>
+            <div class="small">Players in this demo</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-right card">
+        <h3 style="margin-top:0">Match Highlights</h3>
+        <p style="color:var(--muted);margin-top:0.25rem">This panel is a demo placeholder for real-time match highlights, stats and featured players. It showcases the card-style components used across the site.</p>
+
+        <div style="margin-top:1rem">
+          <div style="display:flex;gap:0.6rem;align-items:center">
+            <div style="width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ff9b00);display:flex;align-items:center;justify-content:center;font-weight:800;color:#071226">9</div>
+            <div>
+              <div style="font-weight:700">Top Scorer: J. Doe</div>
+              <small style="color:var(--muted)">7 goals this season</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <hr style="border-color:rgba(255,255,255,0.02);margin:0 1.5rem">
+
+    <!-- TEAMS LIST -->
+    <section id="teams" style="padding:1.25rem 1.5rem">
+      <h2 style="margin-top:0">Teams</h2>
+      <div class="list-grid card" id="teamsList">
+        <!-- Team cards are injected here by JS -->
+      </div>
+    </section>
+
+    <hr style="border-color:rgba(255,255,255,0.02);margin:0 1.5rem">
+
+    <!-- PLAYERS LIST -->
+    <section id="players" style="padding:1.25rem 1.5rem 2rem">
+      <h2 style="margin-top:0">Players</h2>
+      <div class="list-grid card" id="playersList">
+        <!-- Player cards are injected here by JS -->
+      </div>
+    </section>
+
+    <!-- ADMIN DASHBOARD (hidden by default) -->
+    <section id="admin" class="admin-dash" aria-hidden="true">
+      <h2>Admin Dashboard</h2>
+      <p class="lead" style="margin-top:0">Add or remove teams and players in this demo. Changes are saved locally in your browser (localStorage).</p>
+
+      <div style="margin-top:1rem">
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Add Team</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="teamInput" class="input" placeholder="Team name" />
+            <button id="addTeamBtn" class="btn">Add Team</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Add Player</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="playerInput" class="input" placeholder="Player name" />
+            <select id="playerTeamSelect" class="input" aria-label="Select team">
+              <option value="">Unassigned</option>
+            </select>
+            <button id="addPlayerBtn" class="btn">Add Player</button>
+          </div>
+
+          <div class="flex-row" style="margin-top:0.6rem">
+            <input id="playerAge" class="input" type="number" min="0" placeholder="Age" />
+            <input id="playerDob" class="input" type="date" placeholder="Date of birth" />
+            <input id="playerCountry" class="input" placeholder="Country" />
+            <input id="playerLanguage" class="input" placeholder="Language" />
+          </div>
+        </div>
+
+        <div style="margin-top:1.2rem">
+          <h3 style="margin:0 0 0.6rem">Teams</h3>
+          <div id="adminTeamsList" class="list-grid"></div>
+
+          <h3 style="margin:1rem 0 0.6rem">Players</h3>
+          <div id="adminPlayersList" class="list-grid"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem">
+        <button id="logoutBtn" class="btn secondary">Logout</button>
+      </div>
+    </section>
+
+    <!-- TEAM DASHBOARD (for team admins) -->
+    <section id="teamAdmin" class="admin-dash" aria-hidden="true" style="display:none">
+      <h2>Team Dashboard</h2>
+      <p class="lead" style="margin-top:0">Manage your team's players here.</p>
+
+      <div style="margin-top:1rem">
+        <div style="margin-bottom:0.8rem">
+          <div><strong>Team:</strong> <span id="teamAdminName"></span></div>
+          <div style="margin-top:0.4rem;color:var(--muted)"><strong>Username:</strong> <span id="teamAdminUsername"></span></div>
+        </div>
+
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Change Password</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="teamNewPassword" class="input" placeholder="New password" />
+            <button id="changeTeamPasswordBtn" class="btn">Change</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Add Player to your team</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="teamPlayerInput" class="input" placeholder="Player name" />
+            <button id="addTeamPlayerBtn" class="btn">Add Player</button>
+          </div>
+          <div class="flex-row" style="margin-top:0.6rem">
+            <input id="teamPlayerAge" class="input" type="number" min="0" placeholder="Age" />
+            <input id="teamPlayerDob" class="input" type="date" placeholder="DOB" />
+            <input id="teamPlayerCountry" class="input" placeholder="Country" />
+            <input id="teamPlayerLanguage" class="input" placeholder="Language" />
+          </div>
+        </div>
+
+        <h3 style="margin:1rem 0 0.6rem">Your Players</h3>
+        <div id="teamPlayersList" class="list-grid"></div>
+      </div>
+
+      <div style="margin-top:1rem">
+        <button id="teamLogoutBtn" class="btn secondary">Logout</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Admin Login</h3>
+      <p style="color:var(--muted);margin-top:0">Enter admin credentials to access the dashboard. (Demo only)</p>
+
+      <div class="form-row">
+        <label for="username">Username</label>
+        <input id="username" class="input" placeholder="admin" />
+      </div>
+      <div class="form-row">
+        <label for="password">Password</label>
+        <input id="password" type="password" class="input" placeholder="password" />
+      </div>
+
+      <div style="display:flex;gap:0.6rem;align-items:center;justify-content:flex-end;margin-top:0.6rem">
+        <button id="cancelLogin" class="btn secondary">Cancel</button>
+        <button id="submitLogin" class="btn">Login</button>
+      </div>
+
+      <p id="loginHelp" style="color:var(--muted);font-size:0.85rem;margin-top:0.6rem"></p>
+
+    </div>
+  </div>
+
+  <!-- TEAM LOGIN MODAL -->
+  <div id="teamLoginModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Team Login</h3>
+      <p style="color:var(--muted);margin-top:0">Enter your team credentials to manage your team (add/delete players).</p>
+
+      <div class="form-row">
+        <label for="teamUsername">Username</label>
+        <input id="teamUsername" class="input" placeholder="team_admin" />
+      </div>
+      <div class="form-row">
+        <label for="teamPassword">Password</label>
+        <input id="teamPassword" type="password" class="input" placeholder="team123" />
+      </div>
+
+      <div style="display:flex;gap:0.6rem;align-items:center;justify-content:flex-end;margin-top:0.6rem">
+        <button id="cancelTeamLogin" class="btn secondary">Cancel</button>
+        <button id="submitTeamLogin" class="btn">Login</button>
+      </div>
+
+      <p id="teamLoginHelp" style="color:var(--muted);font-size:0.85rem;margin-top:0.6rem"></p>
+    </div>
+  </div>
+
+  <!-- TEAM SIGN-UP MODAL -->
+  <div id="teamSignUpModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Team Sign Up</h3>
+      <p style="color:var(--muted);margin-top:0">Create a team account: choose a team name, username and password.</p>
+
+      <div class="form-row">
+        <label for="signTeamName">Team name</label>
+        <input id="signTeamName" class="input" placeholder="My Team" />
+      </div>
+      <div class="form-row">
+        <label for="signUsername">Username</label>
+        <input id="signUsername" class="input" placeholder="team_admin" />
+      </div>
+      <div class="form-row">
+        <label for="signPassword">Password</label>
+        <input id="signPassword" type="password" class="input" placeholder="At least 6 characters" />
+      </div>
+      <div class="form-row">
+        <label for="signPasswordConfirm">Confirm Password</label>
+        <input id="signPasswordConfirm" type="password" class="input" placeholder="Confirm password" />
+      </div>
+
+      <div style="display:flex;gap:0.6rem;align-items:center;justify-content:flex-end;margin-top:0.6rem">
+        <button id="cancelTeamSignUp" class="btn secondary">Cancel</button>
+        <button id="submitTeamSignUp" class="btn">Create Account</button>
+      </div>
+
+      <p id="teamSignUpHelp" style="color:var(--muted);font-size:0.85rem;margin-top:0.6rem"></p>
+    </div>
+  </div>
+
+  <footer>
+    <small>Built with vanilla HTML, CSS & JavaScript • Demo only</small>
+  </footer>
+
+  <script src="{% static 'main/main.js' %}"></script>
+</body>
+</html>
