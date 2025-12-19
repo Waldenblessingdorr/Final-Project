@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Football Fever — Landing</title>
+
+  <!-- External stylesheet (moved from internal) -->
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <div class="badge">FF</div>
+      <div>
+        <div style="font-size:0.9rem">Football Fever</div>
+        <small style="color:var(--muted);">Official Demo</small>
+      </div>
+    </div>
+
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#">Home</a>
+      <a href="#teams">Teams</a>
+      <a href="#players">Players</a>
+      <a href="#admin">Admin</a>
+    </nav>
+
+    <div style="display:flex;gap:0.6rem;align-items:center">
+      <!-- Team & Admin Login buttons -->
+      <button id="teamBtn" class="btn secondary">Team Login</button>
+      <button id="teamSignUpBtn" class="btn secondary">Team Sign Up</button>
+      <button id="adminBtn" class="btn secondary">Admin Login</button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main>
+    <section class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">Premier Demo • Live</div>
+        <h1>Football Fever</h1>
+        <p class="lead">A modern, responsive football landing page demo. Explore teams and players, and use the Admin dashboard to manage demo data — built with vanilla HTML, CSS and JavaScript.</p>
+
+        <div class="cta-row">
+          <button class="btn large" onclick="document.getElementById('teams').scrollIntoView({behavior:'smooth'})">Explore Teams</button>
+          <button class="btn secondary" onclick="document.getElementById('players').scrollIntoView({behavior:'smooth'})">Browse Players</button>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta card">
+            <div class="big" id="teamsCount">--</div>
+            <div class="small">Teams in this demo</div>
+          </div>
+          <div class="meta card">
+            <div class="big" id="playersCount">--</div>
+            <div class="small">Players in this demo</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-right card">
+        <!-- Featured content card -->
+        <h3 style="margin-top:0">Match Highlights</h3>
+        <p style="color:var(--muted);margin-top:0.25rem">This panel is a demo placeholder for real-time match highlights, stats and featured players. It showcases the card-style components used across the site.</p>
+
+        <div style="margin-top:1rem">
+          <div style="display:flex;gap:0.6rem;align-items:center">
+            <div style="width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ff9b00);display:flex;align-items:center;justify-content:center;font-weight:800;color:#071226">9</div>
+            <div>
+              <div style="font-weight:700">Top Scorer: J. Doe</div>
+              <small style="color:var(--muted)">7 goals this season</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <hr style="border-color:rgba(255,255,255,0.02);margin:0 1.5rem">
+
+    <!-- TEAMS LIST -->
+    <section id="teams" style="padding:1.25rem 1.5rem">
+      <h2 style="margin-top:0">Teams</h2>
+      <div class="list-grid card" id="teamsList">
+        <!-- Team cards are injected here by JS -->
+      </div>
+    </section>
+
+    <hr style="border-color:rgba(255,255,255,0.02);margin:0 1.5rem">
+
+    <!-- PLAYERS LIST -->
+    <section id="players" style="padding:1.25rem 1.5rem 2rem">
+      <h2 style="margin-top:0">Players</h2>
+      <div class="list-grid card" id="playersList">
+        <!-- Player cards are injected here by JS -->
+      </div>
+    </section>
+
+    <!-- ADMIN DASHBOARD (hidden by default) -->
+    <section id="admin" class="admin-dash" aria-hidden="true">
+      <h2>Admin Dashboard</h2>
+      <p class="lead" style="margin-top:0">Add or remove teams and players in this demo. Changes are saved locally in your browser (localStorage).</p>
+
+      <div style="margin-top:1rem">
+        <!-- Add Team -->
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Add Team</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="teamInput" class="input" placeholder="Team name" />
+            <button id="addTeamBtn" class="btn">Add Team</button>
+          </div>
+        </div>
+
+        <!-- Add Player -->
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Add Player</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="playerInput" class="input" placeholder="Player name" />
+            <!-- Optional team selector for assigning players to a team -->
+            <select id="playerTeamSelect" class="input" aria-label="Select team">
+              <option value="">Unassigned</option>
+            </select>
+            <button id="addPlayerBtn" class="btn">Add Player</button>
+          </div>
+
+          <!-- Additional player details -->
+          <div class="flex-row" style="margin-top:0.6rem">
+            <input id="playerAge" class="input" type="number" min="0" placeholder="Age" />
+            <input id="playerDob" class="input" type="date" placeholder="Date of birth" />
+            <input id="playerCountry" class="input" placeholder="Country" />
+            <input id="playerLanguage" class="input" placeholder="Language" />
+          </div>
+        </div>
+
+        <!-- Lists -->
+        <div style="margin-top:1.2rem">
+          <h3 style="margin:0 0 0.6rem">Teams</h3>
+          <div id="adminTeamsList" class="list-grid"></div>
+
+          <h3 style="margin:1rem 0 0.6rem">Players</h3>
+          <div id="adminPlayersList" class="list-grid"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem">
+        <button id="logoutBtn" class="btn secondary">Logout</button>
+      </div>
+    </section>
+
+    <!-- TEAM DASHBOARD (for team admins) -->
+    <section id="teamAdmin" class="admin-dash" aria-hidden="true" style="display:none">
+      <h2>Team Dashboard</h2>
+      <p class="lead" style="margin-top:0">Manage your team's players here.</p>
+
+      <div style="margin-top:1rem">
+        <div style="margin-bottom:0.8rem">
+          <div><strong>Team:</strong> <span id="teamAdminName"></span></div>
+          <div style="margin-top:0.4rem;color:var(--muted)"><strong>Username:</strong> <span id="teamAdminUsername"></span></div>
+        </div>
+
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Change Password</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="teamNewPassword" class="input" placeholder="New password" />
+            <button id="changeTeamPasswordBtn" class="btn">Change</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:0.8rem">
+          <label style="font-size:0.9rem;color:var(--muted)">Add Player to your team</label>
+          <div class="flex-row" style="margin-top:0.5rem">
+            <input id="teamPlayerInput" class="input" placeholder="Player name" />
+            <button id="addTeamPlayerBtn" class="btn">Add Player</button>
+          </div>
+          <div class="flex-row" style="margin-top:0.6rem">
+            <input id="teamPlayerAge" class="input" type="number" min="0" placeholder="Age" />
+            <input id="teamPlayerDob" class="input" type="date" placeholder="DOB" />
+            <input id="teamPlayerCountry" class="input" placeholder="Country" />
+            <input id="teamPlayerLanguage" class="input" placeholder="Language" />
+          </div>
+        </div>
+
+        <h3 style="margin:1rem 0 0.6rem">Your Players</h3>
+        <div id="teamPlayersList" class="list-grid"></div>
+      </div>
+
+      <div style="margin-top:1rem">
+        <button id="teamLogoutBtn" class="btn secondary">Logout</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Admin Login</h3>
+      <p style="color:var(--muted);margin-top:0">Enter admin credentials to access the dashboard. (Demo only)</p>
+
+      <div class="form-row">
+        <label for="username">Username</label>
+        <input id="username" class="input" placeholder="admin" />
+      </div>
+      <div class="form-row">
+        <label for="password">Password</label>
+        <input id="password" type="password" class="input" placeholder="password" />
+      </div>
+
+      <div style="display:flex;gap:0.6rem;align-items:center;justify-content:flex-end;margin-top:0.6rem">
+        <button id="cancelLogin" class="btn secondary">Cancel</button>
+        <button id="submitLogin" class="btn">Login</button>
+      </div>
+
+      <p id="loginHelp" style="color:var(--muted);font-size:0.85rem;margin-top:0.6rem"></p>
+
+      <!-- Hardcoded demo credentials are explained in JS comments below -->
+    </div>
+  </div>
+
+  <!-- TEAM LOGIN MODAL -->
+  <div id="teamLoginModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Team Login</h3>
+      <p style="color:var(--muted);margin-top:0">Enter your team credentials to manage your team (add/delete players).</p>
+
+      <div class="form-row">
+        <label for="teamUsername">Username</label>
+        <input id="teamUsername" class="input" placeholder="team_admin" />
+      </div>
+      <div class="form-row">
+        <label for="teamPassword">Password</label>
+        <input id="teamPassword" type="password" class="input" placeholder="team123" />
+      </div>
+
+      <div style="display:flex;gap:0.6rem;align-items:center;justify-content:flex-end;margin-top:0.6rem">
+        <button id="cancelTeamLogin" class="btn secondary">Cancel</button>
+        <button id="submitTeamLogin" class="btn">Login</button>
+      </div>
+
+      <p id="teamLoginHelp" style="color:var(--muted);font-size:0.85rem;margin-top:0.6rem"></p>
+    </div>
+  </div>
+
+  <!-- TEAM SIGN-UP MODAL -->
+  <div id="teamSignUpModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Team Sign Up</h3>
+      <p style="color:var(--muted);margin-top:0">Create a team account: choose a team name, username and password.</p>
+
+      <div class="form-row">
+        <label for="signTeamName">Team name</label>
+        <input id="signTeamName" class="input" placeholder="My Team" />
+      </div>
+      <div class="form-row">
+        <label for="signUsername">Username</label>
+        <input id="signUsername" class="input" placeholder="team_admin" />
+      </div>
+      <div class="form-row">
+        <label for="signPassword">Password</label>
+        <input id="signPassword" type="password" class="input" placeholder="At least 6 characters" />
+      </div>
+      <div class="form-row">
+        <label for="signPasswordConfirm">Confirm Password</label>
+        <input id="signPasswordConfirm" type="password" class="input" placeholder="Confirm password" />
+      </div>
+
+      <div style="display:flex;gap:0.6rem;align-items:center;justify-content:flex-end;margin-top:0.6rem">
+        <button id="cancelTeamSignUp" class="btn secondary">Cancel</button>
+        <button id="submitTeamSignUp" class="btn">Create Account</button>
+      </div>
+
+      <p id="teamSignUpHelp" style="color:var(--muted);font-size:0.85rem;margin-top:0.6rem"></p>
+    </div>
+  </div>
+
+  <footer>
+    <small>Built with vanilla HTML, CSS & JavaScript • Demo only</small>
+  </footer>
+
+  <!--
+    JavaScript for interactivity
+    - Handles the Admin login modal and simple front-end auth
+    - Manages teams and players (add/delete) and renders lists
+    - Uses localStorage for persistence so the demo persists across refreshes
+  -->
+  <script>
+    /******** Demo Credentials (hardcoded for front-end demo purposes) ********/
+    const DEMO_USERNAME = 'admin';
+    const DEMO_PASSWORD = 'football123';
+
+    // Cached DOM elements
+    const adminBtn = document.getElementById('adminBtn');
+    const loginModal = document.getElementById('loginModal');
+    const submitLogin = document.getElementById('submitLogin');
+    const cancelLogin = document.getElementById('cancelLogin');
+    const loginHelp = document.getElementById('loginHelp');
+
+    const teamBtn = document.getElementById('teamBtn');
+    const teamSignUpBtn = document.getElementById('teamSignUpBtn');
+    const teamLoginModal = document.getElementById('teamLoginModal');
+    const submitTeamLogin = document.getElementById('submitTeamLogin');
+    const cancelTeamLogin = document.getElementById('cancelTeamLogin');
+    const teamLoginHelp = document.getElementById('teamLoginHelp');
+
+    // Sign-up modal elements
+    const teamSignUpModal = document.getElementById('teamSignUpModal');
+    const submitTeamSignUp = document.getElementById('submitTeamSignUp');
+    const cancelTeamSignUp = document.getElementById('cancelTeamSignUp');
+    const signTeamName = document.getElementById('signTeamName');
+    const signUsername = document.getElementById('signUsername');
+    const signPassword = document.getElementById('signPassword');
+    const signPasswordConfirm = document.getElementById('signPasswordConfirm');
+    const teamSignUpHelp = document.getElementById('teamSignUpHelp');
+
+    const adminSection = document.getElementById('admin');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const teamSection = document.getElementById('teamAdmin');
+    const teamAdminName = document.getElementById('teamAdminName');
+    const teamAdminUsername = document.getElementById('teamAdminUsername');
+    const changeTeamPasswordBtn = document.getElementById('changeTeamPasswordBtn');
+    const teamNewPassword = document.getElementById('teamNewPassword');
+    const teamPlayerInput = document.getElementById('teamPlayerInput');
+    const addTeamPlayerBtn = document.getElementById('addTeamPlayerBtn');
+    const teamPlayersList = document.getElementById('teamPlayersList');
+
+    const teamInput = document.getElementById('teamInput');
+    const addTeamBtn = document.getElementById('addTeamBtn');
+    const adminTeamsList = document.getElementById('adminTeamsList');
+    const teamsList = document.getElementById('teamsList');
+
+    const playerInput = document.getElementById('playerInput');
+    const addPlayerBtn = document.getElementById('addPlayerBtn');
+    const adminPlayersList = document.getElementById('adminPlayersList');
+    const playersList = document.getElementById('playersList');
+    const playerTeamSelect = document.getElementById('playerTeamSelect');
+    // Additional player detail inputs (admin)
+    const playerAge = document.getElementById('playerAge');
+    const playerDob = document.getElementById('playerDob');
+    const playerCountry = document.getElementById('playerCountry');
+    const playerLanguage = document.getElementById('playerLanguage');
+    // Team-specific player detail inputs
+    const teamPlayerAge = document.getElementById('teamPlayerAge');
+    const teamPlayerDob = document.getElementById('teamPlayerDob');
+    const teamPlayerCountry = document.getElementById('teamPlayerCountry');
+    const teamPlayerLanguage = document.getElementById('teamPlayerLanguage');
+
+    const teamsCount = document.getElementById('teamsCount');
+    const playersCount = document.getElementById('playersCount');
+
+    let currentTeamId = null; 
+
+    // In-memory data structures (mirrors localStorage)
+    let teams = [];
+    let players = [];
+    let isAdmin = false;
+
+    // --- Local Storage helpers ---
+    function loadState(){
+      const t = localStorage.getItem('ff_demo_teams');
+      const p = localStorage.getItem('ff_demo_players');
+      teams = t ? JSON.parse(t) : [
+        {id:uid(), name:'Lions', username:'lions_admin', password:'lions123'},
+        {id:uid(), name:'Tigers', username:'tigers_admin', password:'tigers123'},
+        {id:uid(), name:'Eagles', username:'eagles_admin', password:'eagles123'}
+      ];
+      // Ensure every team has username/password (migrate older data)
+      teams = teams.map(tt => ({...tt, username: tt.username || slug(tt.name) + '_admin', password: tt.password || 'team123'}));
+
+      players = p ? JSON.parse(p) : [
+        {id:uid(), name:'Alex Morgan', teamId:teams[0].id, age:30, dob:'1995-01-20', country:'USA', language:'English'},
+        {id:uid(), name:'Chris Paul', teamId:teams[1].id, age:28, dob:'1997-05-14', country:'England', language:'English'},
+        {id:uid(), name:'Sam Johnson', teamId:'', age:24, dob:'2001-11-03', country:'Australia', language:'English'}
+      ];
+      // Ensure players include detail fields (migrate older data)
+      players = players.map(pp => ({...pp, age: pp.age || '', dob: pp.dob || '', country: pp.country || '', language: pp.language || ''}));
+    }
+    function saveState(){
+      localStorage.setItem('ff_demo_teams', JSON.stringify(teams));
+      localStorage.setItem('ff_demo_players', JSON.stringify(players));
+    }
+
+    // Utility: generate a short unique id
+    function uid(){
+      return Math.random().toString(36).slice(2,9);
+    }
+
+    // --- Rendering functions ---
+    function renderCounts(){
+      teamsCount.textContent = teams.length;
+      playersCount.textContent = players.length;
+    }
+
+    function renderTeams(){
+      // Teams list on the public page
+      teamsList.innerHTML = '';
+      teams.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `<div><strong>${escapeHtml(t.name)}</strong><br><small class=\"small\">Team ID: ${t.id}</small></div>`;
+        teamsList.appendChild(el);
+      });
+
+      // Admin teams list (with delete and credentials)
+      adminTeamsList.innerHTML = '';
+      teams.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `<div><strong>${escapeHtml(t.name)}</strong><small> • ${t.id}</small></div><div><button class=\"del\" data-id=\"${t.id}\">Delete</button> <button class=\"show-creds\" data-id=\"${t.id}\">Creds</button></div>`;
+        adminTeamsList.appendChild(el);
+      });
+
+      // Populate the player team select
+      playerTeamSelect.innerHTML = '<option value="">Unassigned</option>';
+      teams.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id;
+        opt.textContent = t.name;
+        playerTeamSelect.appendChild(opt);
+      });
+
+      // Wire delete buttons
+      adminTeamsList.querySelectorAll('.del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          deleteTeam(id);
+        });
+      });
+
+      // Wire show-creds buttons
+      adminTeamsList.querySelectorAll('.show-creds').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const team = teams.find(tt => tt.id === id);
+          if(team) alert(`Credentials for ${team.name}\nUsername: ${team.username}\nPassword: ${team.password}`);
+        });
+      });
+    }
+
+    function renderPlayers(){
+      playersList.innerHTML = '';
+      players.forEach(p => {
+        const teamName = teams.find(t => t.id === p.teamId)?.name || 'Unassigned';
+        const details = [];
+        if(p.age) details.push(`Age: ${escapeHtml(p.age)}`);
+        if(p.dob) details.push(`DOB: ${escapeHtml(p.dob)}`);
+        if(p.country) details.push(`${escapeHtml(p.country)}`);
+        if(p.language) details.push(`${escapeHtml(p.language)}`);
+        const detailsLine = details.length ? `<br><small class=\"small\">${details.join(' • ')}</small>` : '';
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `<div><strong>${escapeHtml(p.name)}</strong><br><small class=\"small\">${escapeHtml(teamName)}</small>${detailsLine}</div>`;
+        playersList.appendChild(el);
+      });
+
+      adminPlayersList.innerHTML = '';
+      players.forEach(p => {
+        const teamName = teams.find(t => t.id === p.teamId)?.name || 'Unassigned';
+        const details = [];
+        if(p.age) details.push(`Age: ${escapeHtml(p.age)}`);
+        if(p.dob) details.push(`DOB: ${escapeHtml(p.dob)}`);
+        if(p.country) details.push(`${escapeHtml(p.country)}`);
+        if(p.language) details.push(`${escapeHtml(p.language)}`);
+        const detailsLine = details.length ? `<br><small class=\"small\">${details.join(' • ')}</small>` : '';
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `<div><strong>${escapeHtml(p.name)}</strong><small> • ${escapeHtml(teamName)}</small>${detailsLine}</div><div><button class=\"del\" data-id=\"${p.id}\">Delete</button></div>`;
+        adminPlayersList.appendChild(el);
+      });
+
+      adminPlayersList.querySelectorAll('.del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          deletePlayer(id);
+        });
+      });
+    }
+
+    // Escape HTML to avoid XSS from demo inputs
+    function escapeHtml(str){
+      return String(str).replace(/[&<>\"']/g, s => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
+      })[s]);
+    }
+
+    // --- CRUD operations ---
+    function addTeam(name){
+      name = name && name.trim();
+      if(!name) return alert('Team name is required');
+      const username = slug(name) + '_admin';
+      const password = 'team123';
+      const t = {id:uid(), name, username, password};
+      teams.push(t);
+      saveState();
+      renderTeams(); renderCounts();
+      alert(`Team created.\nUsername: ${username}\nPassword: ${password}`);
+    }
+
+    function deleteTeam(id){
+      if(!confirm('Delete this team? Players assigned will become Unassigned.')) return;
+      teams = teams.filter(t => t.id !== id);
+      // Unassign players from deleted team
+      players = players.map(p => p.teamId === id ? {...p, teamId:''} : p);
+      // If a team admin was logged in for this team, log them out
+      if(currentTeamId === id) hideTeamDashboard();
+      saveState(); renderTeams(); renderPlayers(); renderCounts();
+    }
+
+    function addPlayer(name, teamId, details = {}){
+      name = name && name.trim();
+      if(!name) return alert('Player name is required');
+      const p = {
+        id:uid(),
+        name,
+        teamId: teamId || '',
+        age: details.age || '',
+        dob: details.dob || '',
+        country: details.country || '',
+        language: details.language || ''
+      };
+      players.push(p);
+      saveState(); renderPlayers(); renderCounts();
+    }
+
+    function deletePlayer(id){
+      const player = players.find(p => p.id === id);
+      if(!player) return;
+      if(!confirm('Delete this player?')) return;
+      // authorize: admin can delete any; team admin can delete only their own players
+      if(!isAdmin && currentTeamId && player.teamId !== currentTeamId){
+        alert('Not authorized to delete this player');
+        return;
+      }
+      players = players.filter(p => p.id !== id);
+      saveState(); renderPlayers(); renderCounts();
+      if(currentTeamId) renderTeamPlayers();
+    }
+
+    // --- Auth / Modal handling ---
+    function openLogin(){
+      loginModal.classList.add('show');
+      loginModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('username').focus();
+    }
+    function closeLogin(){
+      loginModal.classList.remove('show');
+      loginModal.setAttribute('aria-hidden', 'true');
+      loginHelp.textContent = '';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+
+    function loginAttempt(){
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      // Simple front-end check (hardcoded, demo only)
+      if(u === DEMO_USERNAME && p === DEMO_PASSWORD){
+        isAdmin = true;
+        closeLogin();
+        showAdmin();
+      } else {
+        loginHelp.textContent = 'Invalid credentials. Demo username: "admin" password: "football123"';
+        loginHelp.style.color = 'var(--danger)';
+      }
+    }
+
+    function showAdmin(){
+      adminSection.classList.add('show');
+      adminSection.setAttribute('aria-hidden', 'false');
+      adminBtn.style.display = 'none';
+      // Scroll to admin area for convenience
+      adminSection.scrollIntoView({behavior:'smooth'});
+    }
+
+    function logout(){
+      isAdmin = false;
+      adminSection.classList.remove('show');
+      adminSection.setAttribute('aria-hidden', 'true');
+      adminBtn.style.display = '';
+    }
+
+    // Utility: slugify team names for default usernames
+    function slug(str){
+      return String(str).toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    }
+
+    // --- TEAM AUTH & DASHBOARD ---
+    function openTeamLogin(){
+      teamLoginModal.classList.add('show');
+      teamLoginModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('teamUsername').focus();
+    }
+    function closeTeamLogin(){
+      teamLoginModal.classList.remove('show');
+      teamLoginModal.setAttribute('aria-hidden', 'true');
+      teamLoginHelp.textContent = '';
+      document.getElementById('teamUsername').value = '';
+      document.getElementById('teamPassword').value = '';
+    }
+
+    // --- Team Sign-Up ---
+    function openTeamSignUp(){
+      teamSignUpModal.classList.add('show');
+      teamSignUpModal.setAttribute('aria-hidden', 'false');
+      signTeamName.focus();
+    }
+    function closeTeamSignUp(){
+      teamSignUpModal.classList.remove('show');
+      teamSignUpModal.setAttribute('aria-hidden', 'true');
+      teamSignUpHelp.textContent = '';
+      signTeamName.value = '';
+      signUsername.value = '';
+      signPassword.value = '';
+      signPasswordConfirm.value = '';
+    }
+
+    function teamLoginAttempt(){
+      const u = document.getElementById('teamUsername').value.trim();
+      const p = document.getElementById('teamPassword').value;
+      const match = teams.find(t => t.username === u && t.password === p);
+      if(match){
+        currentTeamId = match.id;
+        closeTeamLogin();
+        showTeamDashboard(match.id);
+      } else {
+        teamLoginHelp.textContent = 'Invalid credentials.';
+        teamLoginHelp.style.color = 'var(--danger)';
+      }
+    }
+
+    function teamSignUpAttempt(){
+      const name = signTeamName.value && signTeamName.value.trim();
+      const username = signUsername.value && signUsername.value.trim();
+      const pass = signPassword.value || '';
+      const pass2 = signPasswordConfirm.value || '';
+
+      if(!name) return (teamSignUpHelp.textContent = 'Team name is required');
+      if(!username) return (teamSignUpHelp.textContent = 'Username is required');
+      if(pass.length < 6) return (teamSignUpHelp.textContent = 'Password must be at least 6 characters');
+      if(pass !== pass2) return (teamSignUpHelp.textContent = 'Passwords do not match');
+      // ensure username unique
+      if(teams.find(t => t.username.toLowerCase() === username.toLowerCase())) return (teamSignUpHelp.textContent = 'Username already taken');
+      if(teams.find(t => t.name.toLowerCase() === name.toLowerCase())) return (teamSignUpHelp.textContent = 'Team name already exists');
+
+      const t = {id:uid(), name, username, password: pass};
+      teams.push(t);
+      saveState();
+      renderTeams(); renderCounts();
+      alert('Team account created successfully. You are now logged in as the team.');
+      currentTeamId = t.id;
+      closeTeamSignUp();
+      showTeamDashboard(t.id);
+    }
+
+    function showTeamDashboard(teamId){
+      const team = teams.find(t => t.id === teamId);
+      if(!team) return;
+      teamSection.classList.add('show');
+      teamSection.setAttribute('aria-hidden', 'false');
+      teamAdminName.textContent = team.name;
+      teamAdminUsername.textContent = team.username;
+      teamBtn.style.display = 'none';
+      // render team-specific players
+      renderTeamPlayers();
+      teamSection.scrollIntoView({behavior:'smooth'});
+    }
+
+    function hideTeamDashboard(){
+      currentTeamId = null;
+      teamSection.classList.remove('show');
+      teamSection.setAttribute('aria-hidden', 'true');
+      teamBtn.style.display = '';
+    }
+
+    function renderTeamPlayers(){
+      teamPlayersList.innerHTML = '';
+      const teamPlayers = players.filter(p => p.teamId === currentTeamId);
+      teamPlayers.forEach(p => {
+        const details = [];
+        if(p.age) details.push(`Age: ${escapeHtml(p.age)}`);
+        if(p.dob) details.push(`DOB: ${escapeHtml(p.dob)}`);
+        if(p.country) details.push(`${escapeHtml(p.country)}`);
+        if(p.language) details.push(`${escapeHtml(p.language)}`);
+        const detailsLine = details.length ? `<br><small class=\"small\">${details.join(' • ')}</small>` : '';
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `<div><strong>${escapeHtml(p.name)}</strong><br><small class=\"small\">${escapeHtml(p.id)}</small>${detailsLine}</div><div><button class=\"del\" data-id=\"${p.id}\">Delete</button></div>`;
+        teamPlayersList.appendChild(el);
+      });
+
+      teamPlayersList.querySelectorAll('.del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          deletePlayer(id);
+        });
+      });
+    }
+
+    // Change team password
+    function changeTeamPassword(newPass){
+      if(!currentTeamId) return;
+      if(!newPass) return alert('Password required');
+      const team = teams.find(t => t.id === currentTeamId);
+      team.password = newPass;
+      saveState();
+      alert('Password updated');
+    }
+
+    // --- Wiring up event listeners ---
+    adminBtn.addEventListener('click', openLogin);
+    cancelLogin.addEventListener('click', closeLogin);
+    submitLogin.addEventListener('click', loginAttempt);
+    // Allow Enter key to submit in modal
+    document.getElementById('password').addEventListener('keyup', (e)=>{ if(e.key === 'Enter') loginAttempt(); });
+    document.getElementById('username').addEventListener('keyup', (e)=>{ if(e.key === 'Enter') document.getElementById('password').focus(); });
+
+    teamBtn.addEventListener('click', openTeamLogin);
+    cancelTeamLogin.addEventListener('click', closeTeamLogin);
+    submitTeamLogin.addEventListener('click', teamLoginAttempt);
+    // Team modal Enter shortcuts
+    document.getElementById('teamPassword').addEventListener('keyup', (e)=>{ if(e.key === 'Enter') teamLoginAttempt(); });
+    document.getElementById('teamUsername').addEventListener('keyup', (e)=>{ if(e.key === 'Enter') document.getElementById('teamPassword').focus(); });
+
+    teamSignUpBtn.addEventListener('click', openTeamSignUp);
+    cancelTeamSignUp.addEventListener('click', closeTeamSignUp);
+    submitTeamSignUp.addEventListener('click', teamSignUpAttempt);
+    document.getElementById('signPasswordConfirm').addEventListener('keyup', (e)=>{ if(e.key === 'Enter') teamSignUpAttempt(); });
+
+    // Close modals by clicking outside the card
+    loginModal.addEventListener('click', (e)=>{ if(e.target === loginModal) closeLogin(); });
+    teamLoginModal.addEventListener('click', (e)=>{ if(e.target === teamLoginModal) closeTeamLogin(); });
+    teamSignUpModal.addEventListener('click', (e)=>{ if(e.target === teamSignUpModal) closeTeamSignUp(); });
+
+    logoutBtn.addEventListener('click', () => { if(confirm('Logout?')) logout(); });
+    teamLogoutBtn.addEventListener('click', () => { if(confirm('Logout?')) hideTeamDashboard(); });
+
+    addTeamBtn.addEventListener('click', () => { addTeam(teamInput.value); teamInput.value=''; });
+    addPlayerBtn.addEventListener('click', () => {
+      addPlayer(playerInput.value, playerTeamSelect.value, {
+        age: playerAge.value.trim(),
+        dob: playerDob.value,
+        country: playerCountry.value.trim(),
+        language: playerLanguage.value.trim()
+      });
+      playerInput.value=''; playerTeamSelect.value=''; playerAge.value=''; playerDob.value=''; playerCountry.value=''; playerLanguage.value='';
+    });
+
+    changeTeamPasswordBtn.addEventListener('click', () => { changeTeamPassword(teamNewPassword.value.trim()); teamNewPassword.value=''; });
+    addTeamPlayerBtn.addEventListener('click', () => { if(!currentTeamId) return alert('Not logged in as team'); addPlayer(teamPlayerInput.value, currentTeamId, {age: teamPlayerAge.value.trim(), dob: teamPlayerDob.value, country: teamPlayerCountry.value.trim(), language: teamPlayerLanguage.value.trim()}); teamPlayerInput.value=''; teamPlayerAge.value=''; teamPlayerDob.value=''; teamPlayerCountry.value=''; teamPlayerLanguage.value=''; renderTeamPlayers(); });
+
+    // Allow pressing Enter in inputs to trigger add
+    teamInput.addEventListener('keyup', (e)=>{ if(e.key === 'Enter') { addTeam(teamInput.value); teamInput.value=''; } });
+    playerInput.addEventListener('keyup', (e)=>{ if(e.key === 'Enter') {
+      addPlayer(playerInput.value, playerTeamSelect.value, {age: playerAge.value.trim(), dob: playerDob.value, country: playerCountry.value.trim(), language: playerLanguage.value.trim()});
+      playerInput.value=''; playerTeamSelect.value=''; playerAge.value=''; playerDob.value=''; playerCountry.value=''; playerLanguage.value='';
+    } });
+
+    teamPlayerInput.addEventListener('keyup', (e)=>{ if(e.key === 'Enter') { if(!currentTeamId) return alert('Not logged in as team'); addPlayer(teamPlayerInput.value, currentTeamId, {age: teamPlayerAge.value.trim(), dob: teamPlayerDob.value, country: teamPlayerCountry.value.trim(), language: teamPlayerLanguage.value.trim()}); teamPlayerInput.value=''; teamPlayerAge.value=''; teamPlayerDob.value=''; teamPlayerCountry.value=''; teamPlayerLanguage.value=''; renderTeamPlayers(); } });
+
+    // Keyboard shortcuts for last detail fields (Enter on language field submits)
+    teamPlayerLanguage.addEventListener('keyup', (e)=>{ if(e.key === 'Enter') { if(!currentTeamId) return alert('Not logged in as team'); addPlayer(teamPlayerInput.value, currentTeamId, {age: teamPlayerAge.value.trim(), dob: teamPlayerDob.value, country: teamPlayerCountry.value.trim(), language: teamPlayerLanguage.value.trim()}); teamPlayerInput.value=''; teamPlayerAge.value=''; teamPlayerDob.value=''; teamPlayerCountry.value=''; teamPlayerLanguage.value=''; renderTeamPlayers(); } });
+    playerLanguage.addEventListener('keyup', (e)=>{ if(e.key === 'Enter') { addPlayer(playerInput.value, playerTeamSelect.value, {age: playerAge.value.trim(), dob: playerDob.value, country: playerCountry.value.trim(), language: playerLanguage.value.trim()}); playerInput.value=''; playerTeamSelect.value=''; playerAge.value=''; playerDob.value=''; playerCountry.value=''; playerLanguage.value=''; } });
+
+    // --- Initialize ---
+    function init(){
+      loadState();
+      renderTeams();
+      renderPlayers();
+      renderCounts();
+    }
+
+    // Run the init function when the file loads
+    init();
+
+  </script>
+</body>
+</html>
